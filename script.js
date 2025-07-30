@@ -409,20 +409,61 @@ function verificarPaginaResultado() {
                     console.log('Elemento relatorio-conteudo:', relatorioConteudo);
                     
                     if (relatorioConteudo) {
-                        // Conteúdo de teste simples
+                        // Conteúdo de teste simples com força bruta de CSS
                         relatorioConteudo.innerHTML = `
-                            <div style="padding: 20px; background: #f0fdf4; border: 2px solid #86efac; border-radius: 15px;">
-                                <h2 style="color: #166534;">✅ Questionário Enviado!</h2>
-                                <p><strong>ID:</strong> #${dados.id}</p>
-                                <p><strong>Data:</strong> ${dados.timestamp}</p>
-                                <button onclick="baixarPDF()" class="btn btn-primary">📄 Baixar PDF</button>
-                                <button onclick="voltarFormulario()" class="btn btn-secondary">← Novo Questionário</button>
+                            <div style="
+                                padding: 40px !important; 
+                                background: #f0fdf4 !important; 
+                                border: 2px solid #86efac !important; 
+                                border-radius: 15px !important;
+                                margin: 20px 0 !important;
+                                width: 100% !important;
+                                box-sizing: border-box !important;
+                                position: relative !important;
+                                z-index: 9999 !important;
+                                min-height: 200px !important;
+                                display: block !important;
+                                visibility: visible !important;
+                            ">
+                                <h2 style="color: #166534 !important; font-size: 24px !important; margin-bottom: 20px !important;">✅ Questionário Enviado com Sucesso!</h2>
+                                <p style="font-size: 18px !important; margin: 10px 0 !important;"><strong>ID:</strong> #${dados.id}</p>
+                                <p style="font-size: 16px !important; margin: 10px 0 !important;"><strong>Data:</strong> ${dados.timestamp}</p>
+                                <div style="margin-top: 30px !important;">
+                                    <button onclick="baixarPDF()" style="
+                                        padding: 12px 24px !important; 
+                                        background: #3b82f6 !important; 
+                                        color: white !important; 
+                                        border: none !important; 
+                                        border-radius: 8px !important; 
+                                        cursor: pointer !important;
+                                        margin-right: 10px !important;
+                                        font-size: 16px !important;
+                                    ">📄 Baixar PDF</button>
+                                    <button onclick="voltarFormulario()" style="
+                                        padding: 12px 24px !important; 
+                                        background: #6b7280 !important; 
+                                        color: white !important; 
+                                        border: none !important; 
+                                        border-radius: 8px !important; 
+                                        cursor: pointer !important;
+                                        font-size: 16px !important;
+                                    ">← Novo Questionário</button>
+                                </div>
                             </div>
                         `;
                         
-                        // Esconder formulário e mostrar relatório
-                        formElement.parentElement.style.display = 'none';
-                        relatorioElement.style.display = 'block';
+                        // Forçar visibilidade com CSS extremo
+                        formElement.parentElement.style.cssText = 'display: none !important;';
+                        relatorioElement.style.cssText = `
+                            display: block !important;
+                            visibility: visible !important;
+                            position: relative !important;
+                            z-index: 1000 !important;
+                            width: 100% !important;
+                            min-height: 400px !important;
+                            background: white !important;
+                            padding: 20px !important;
+                        `;
                         
                         console.log('Tela montada com sucesso!');
                     } else {

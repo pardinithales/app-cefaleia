@@ -215,7 +215,6 @@ async function gerarRelatorio() {
                 timestamp: timestamp,
                 dados: formData
             };
-            console.log('Salvando dados no sessionStorage:', dadosParaSalvar);
             sessionStorage.setItem('relatorio_completo', JSON.stringify(dadosParaSalvar));
             
             // Atualizar URL ANTES de mostrar a tela
@@ -392,36 +391,23 @@ function verificarSenha() {
 
 // Verificar página de resultado
 function verificarPaginaResultado() {
-    console.log('Verificando página de resultado...');
-    
     try {
         const urlParams = new URLSearchParams(window.location.search);
-        console.log('URL params:', urlParams.toString());
         
         if (urlParams.get('resultado') === 'true') {
-            console.log('URL indica página de resultado');
-            
             // Verificar se tem dados salvos
             const dadosSalvos = sessionStorage.getItem('relatorio_completo');
-            console.log('Dados brutos do sessionStorage:', dadosSalvos);
             
             if (dadosSalvos) {
-                console.log('Dados existem, tentando parsear...');
                 const dados = JSON.parse(dadosSalvos);
-                console.log('Dados parseados com sucesso:', dados);
                 
                 // Verificar se elementos existem
                 const formElement = document.getElementById('cefaleiaForm');
                 const relatorioElement = document.getElementById('relatorio');
-                console.log('Form element:', formElement);
-                console.log('Relatório element:', relatorioElement);
                 
                 if (formElement && relatorioElement) {
-                    console.log('Elementos encontrados, montando tela...');
-                    
-                    // Criar conteúdo simples de teste primeiro
+                    // Criar conteúdo da tela de sucesso
                     const relatorioConteudo = document.getElementById('relatorio-conteudo');
-                    console.log('Elemento relatorio-conteudo:', relatorioConteudo);
                     
                     if (relatorioConteudo) {
                         // Conteúdo de teste simples com força bruta de CSS
@@ -486,45 +472,22 @@ function verificarPaginaResultado() {
                              padding: 20px !important;
                              opacity: 1 !important;
                          `;
-                         
-                         // Verificar imediatamente
-                         console.log('CSS aplicado:', relatorioElement.style.cssText);
-                        
-                                                 console.log('Tela montada com sucesso!');
-                         
-                         // Verificação final e força extrema
-                         console.log('Estado final do relatório:', relatorioElement.style.display);
-                         
-                         // Se ainda estiver oculto, forçar com timeout
-                         setTimeout(() => {
-                             relatorioElement.style.cssText = `
-                                 display: block !important;
-                                 visibility: visible !important;
-                                 position: relative !important;
-                                 z-index: 10000 !important;
-                                 width: 100% !important;
-                                 min-height: 400px !important;
-                                 background: white !important;
-                                 padding: 20px !important;
-                                 opacity: 1 !important;
-                             `;
-                             console.log('Forçado novamente após timeout:', relatorioElement.style.display);
-                         }, 50);
+                                                 
                     } else {
-                        console.error('Elemento relatorio-conteudo não encontrado!');
+                        // Elemento relatorio-conteudo não encontrado
+                        return;
                     }
                 } else {
-                    console.error('Elementos form ou relatório não encontrados!');
+                    // Elementos form ou relatório não encontrados
+                    return;
                 }
             } else {
-                console.log('Nenhum dado encontrado, redirecionando...');
+                // Nenhum dado encontrado, voltar ao formulário
                 window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
             }
-        } else {
-            console.log('URL não indica página de resultado');
         }
     } catch (error) {
-        console.error('Erro geral na verificação:', error);
+        console.error('Erro na verificação da página:', error);
     }
 }
 

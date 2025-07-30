@@ -18,8 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
         salvarRascunho(true); // true = silencioso
     });
 
-    // Desabilitar opções conflitantes
+    // Configurar todas as validações
     configurarOpcoesMutuamenteExclusivas();
+    configurarNumeroExatoExclusivo();
+    configurarAuraSubPerguntas();
+    configurarCalculoMIDAS();
+    configurarCalculoGAD7();
+    configurarPoscriseExclusivo();
 });
 
 // Configurar opções mutuamente exclusivas
@@ -449,4 +454,160 @@ style.textContent = `
         to { transform: translateX(100%); opacity: 0; }
     }
 `;
-document.head.appendChild(style); 
+document.head.appendChild(style);
+
+// Configurar exclusividade entre número exato e opções múltiplas
+function configurarNumeroExatoExclusivo() {
+    const numerosExatos = document.querySelectorAll('.numero-exato');
+    
+    numerosExatos.forEach(numeroExato => {
+        const grupoRadio = numeroExato.closest('.question-group').querySelectorAll('input[type="radio"]');
+        
+        // Quando preenche número exato, desabilita rádios
+        numeroExato.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                grupoRadio.forEach(radio => {
+                    radio.disabled = true;
+                    radio.checked = false;
+                });
+                this.classList.add('numero-exato-ativo');
+            } else {
+                grupoRadio.forEach(radio => {
+                    radio.disabled = false;
+                });
+                this.classList.remove('numero-exato-ativo');
+            }
+        });
+        
+        // Quando seleciona rádio, limpa número exato
+        grupoRadio.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    numeroExato.value = '';
+                    numeroExato.classList.remove('numero-exato-ativo');
+                }
+            });
+        });
+    });
+}
+
+// Configurar sub-perguntas da aura
+function configurarAuraSubPerguntas() {
+    const aurasCheckboxes = document.querySelectorAll('input[name^="aura_"]:not([name="aura_nenhum"])');
+    const auraNenhum = document.querySelector('input[name="aura_nenhum"]');
+    const auraDetails = document.getElementById('aura-details');
+    
+    function verificarAura() {
+        const algumaSelecionada = Array.from(aurasCheckboxes).some(cb => cb.checked);
+        if (algumaSelecionada && !auraNenhum.checked) {
+            auraDetails.style.display = 'block';
+        } else {
+            auraDetails.style.display = 'none';
+        }
+    }
+    
+    aurasCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', verificarAura);
+    });
+    
+    auraNenhum.addEventListener('change', verificarAura);
+}
+
+// Configurar exclusividade no pós-crise
+function configurarPoscriseExclusivo() {
+    const posNormal = document.querySelector('input[name="pos_normal"]');
+    const outrosPos = document.querySelectorAll('input[name^="pos_"]:not([name="pos_normal"]):not([name="pos_observacoes"])');
+    
+    posNormal?.addEventListener('change', function() {
+        if (this.checked) {
+            outrosPos.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            });
+        } else {
+            outrosPos.forEach(checkbox => {
+                checkbox.disabled = false;
+            });
+        }
+    });
+    
+    outrosPos.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (Array.from(outrosPos).some(cb => cb.checked)) {
+                posNormal.checked = false;
+                posNormal.disabled = true;
+            } else {
+                posNormal.disabled = false;
+            }
+        });
+    });
+}
+
+// Calcular pontuação MIDAS
+function configurarCalculoMIDAS() {
+    const midasInputs = document.querySelectorAll('input[name^="midas_"]');
+    const midasScore = document.getElementById('midas-score');
+    const midasInterpretation = document.getElementById('midas-interpretation');
+    
+    function calcularMIDAS() {
+        let total = 0;
+        midasInputs.forEach(input => {
+            total += parseInt(input.value) || 0;
+        });
+        
+        midasScore.textContent = total;
+        
+        let interpretacao = '';
+        if (total <= 5) {
+            interpretacao = 'Grau I - Incapacidade mínima ou infrequente';
+        } else if (total <= 10) {
+            interpretacao = 'Grau II - Incapacidade leve ou pouco frequente';
+        } else if (total <= 20) {
+            interpretacao = 'Grau III - Incapacidade moderada';
+        } else {
+            interpretacao = 'Grau IV - Incapacidade grave';
+        }
+        
+        midasInterpretation.textContent = interpretacao;
+    }
+    
+    midasInputs.forEach(input => {
+        input.addEventListener('input', calcularMIDAS);
+    });
+}
+
+// Calcular pontuação GAD-7
+function configurarCalculoGAD7() {
+    const gad7Inputs = document.querySelectorAll('input[name^="gad7_"]');
+    const gad7Score = document.getElementById('gad7-score');
+    const gad7Interpretation = document.getElementById('gad7-interpretation');
+    
+    function calcularGAD7() {
+        let total = 0;
+        for (let i = 1; i <= 7; i++) {
+            const selected = document.querySelector(`input[name="gad7_${i}"]:checked`);
+            if (selected) {
+                total += parseInt(selected.value);
+            }
+        }
+        
+        gad7Score.textContent = total;
+        
+        let interpretacao = '';
+        if (total <= 4) {
+            interpretacao = 'Ansiedade mínima';
+        } else if (total <= 9) {
+            interpretacao = 'Ansiedade leve';
+        } else if (total <= 14) {
+            interpretacao = 'Ansiedade moderada';
+        } else {
+            interpretacao = 'Ansiedade grave';
+        }
+        
+        gad7Interpretation.textContent = interpretacao;
+    }
+    
+    gad7Inputs.forEach(input => {
+        input.addEventListener('change', calcularGAD7);
+    });
+} 

@@ -279,10 +279,29 @@
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
+    <div id="login-container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+        <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 30px;">🔐 Área Médica Restrita</h2>
+            <div style="text-align: center;">
+                <input type="password" id="senha-dashboard" placeholder="Digite a senha de acesso" 
+                       style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 16px; margin-bottom: 20px;">
+                <button onclick="verificarSenhaDashboard()" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 16px;">
+                    Entrar
+                </button>
+                <p id="erro-senha" style="color: #dc3545; margin-top: 15px; display: none;">
+                    Senha incorreta!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container" style="display: none;">
         <div class="dashboard-header">
             <h1>📊 Dashboard de Respostas</h1>
             <p>Visualização e análise dos questionários de cefaleia</p>
+            <button onclick="logout()" style="position: absolute; top: 20px; right: 20px; padding: 8px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Sair
+            </button>
         </div>
 
         <div class="stats-grid" id="statsGrid">
@@ -322,11 +341,55 @@
     </div>
 
     <script>
-        // Carregar dados ao iniciar
+        // Verificar autenticação ao carregar
         document.addEventListener('DOMContentLoaded', function() {
+            const senhaInput = document.getElementById('senha-dashboard');
+            if (senhaInput) {
+                senhaInput.focus();
+                senhaInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        verificarSenhaDashboard();
+                    }
+                });
+            }
+        });
+
+        // Verificar senha do dashboard
+        function verificarSenhaDashboard() {
+            const senha = document.getElementById('senha-dashboard').value;
+            
+            if (senha === 'tpb801') {
+                // Senha correta
+                document.getElementById('login-container').style.display = 'none';
+                document.querySelector('.dashboard-container').style.display = 'block';
+                
+                // Carregar dados
+                carregarEstatisticas();
+                carregarRespostas();
+                
+                // Salvar autenticação na sessão
+                sessionStorage.setItem('dashboard_auth', 'true');
+            } else {
+                // Senha incorreta
+                document.getElementById('erro-senha').style.display = 'block';
+                document.getElementById('senha-dashboard').value = '';
+                document.getElementById('senha-dashboard').focus();
+            }
+        }
+
+        // Logout
+        function logout() {
+            sessionStorage.removeItem('dashboard_auth');
+            location.reload();
+        }
+
+        // Verificar se já está autenticado
+        if (sessionStorage.getItem('dashboard_auth') === 'true') {
+            document.getElementById('login-container').style.display = 'none';
+            document.querySelector('.dashboard-container').style.display = 'block';
             carregarEstatisticas();
             carregarRespostas();
-        });
+        }
 
         // Carregar estatísticas
         async function carregarEstatisticas() {

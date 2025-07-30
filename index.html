@@ -45,7 +45,7 @@
                         </label>
                     </div>
                     <div class="input-group">
-                        <label>Idade exata: <input type="number" name="idade_exata" min="0" max="120"> anos</label>
+                        <label>Idade exata: <input type="number" name="idade_exata" min="0" max="120" class="numero-exato"> anos</label>
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
                         </label>
                     </div>
                     <div class="input-group">
-                        <label>Número exato por mês: <input type="number" name="crises_mes_exato" min="0"></label>
+                        <label>Número exato por mês: <input type="number" name="crises_mes_exato" min="0" class="numero-exato"></label>
                     </div>
                 </div>
 
@@ -266,8 +266,13 @@
                     </div>
                     <div class="input-group">
                         <label>Duração típica: 
-                            <input type="number" name="duracao_horas_sem_med" min="0" placeholder="Horas"> horas
-                            <input type="number" name="duracao_minutos_sem_med" min="0" max="59" placeholder="Minutos"> minutos
+                            <select name="duracao_unidade" class="duracao-selector">
+                                <option value="">Selecione</option>
+                                <option value="horas">Em horas</option>
+                                <option value="minutos">Em minutos</option>
+                            </select>
+                            <input type="number" name="duracao_valor_sem_med" min="0" placeholder="0" style="display:none;" class="duracao-input">
+                            <span class="duracao-label" style="display:none;"></span>
                         </label>
                     </div>
                 </div>
@@ -356,7 +361,7 @@
                         </label>
                     </div>
                     <div class="input-group">
-                        <label>Tempo exato: <input type="number" name="tempo_max_exato" min="0"> minutos</label>
+                        <label>Tempo exato: <input type="number" name="tempo_max_exato" min="0" class="numero-exato"> minutos</label>
                     </div>
                 </div>
             </section>
@@ -371,21 +376,18 @@
                         <label class="checkbox-label">
                             <input type="radio" name="horario_crise" value="manha">
                             <span>Ao acordar pela manhã</span>
-                            <input type="number" class="inline-input" placeholder="quantas por semana" min="0">
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="horario_crise" value="dia">
-                            <span>Durante o dia (ex: tarde)</span>
-                            <input type="time" class="inline-input">
+                            <span>Durante o dia (manhã ou tarde)</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="horario_crise" value="noite">
                             <span>Noite ou madrugada</span>
-                            <input type="time" class="inline-input">
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="horario_crise" value="sem_padrao">
-                            <span>Sem padrão</span>
+                            <span>Sem padrão definido</span>
                         </label>
                     </div>
                 </div>
@@ -394,18 +396,20 @@
                     <p class="question">As crises acordam você do sono?</p>
                     <div class="options">
                         <label class="checkbox-label">
-                            <input type="radio" name="acorda_sono" value="sim_2_5">
-                            <span>Sim, entre 2-5h da manhã</span>
-                            <input type="number" class="inline-input" placeholder="frequência por semana" min="0">
+                            <input type="radio" name="acorda_sono" value="toda_semana">
+                            <span>Sim, toda semana</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="radio" name="acorda_sono" value="sim_variado">
-                            <span>Sim, mas não em horário fixo</span>
-                            <input type="number" class="inline-input" placeholder="intensidade ao acordar /10" min="0" max="10">
+                            <input type="radio" name="acorda_sono" value="frequentemente">
+                            <span>Sim, frequentemente (2-3 vezes por mês)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="acorda_sono" value="raramente">
+                            <span>Sim, mas raramente (menos de 1 vez por mês)</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="acorda_sono" value="nao">
-                            <span>Não</span>
+                            <span>Não, nunca acorda do sono</span>
                         </label>
                     </div>
                 </div>
@@ -512,21 +516,26 @@
                     <div class="options">
                         <label class="checkbox-label">
                             <input type="radio" name="duracao" value="15_180">
-                            <span>15-180 minutos</span>
+                            <span>15-180 minutos (15min a 3 horas)</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="duracao" value="4_72">
-                            <span>4-72 horas</span>
+                            <span>4-72 horas (4h a 3 dias)</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="duracao" value="mais_72">
-                            <span>Mais de 72 horas</span>
+                            <span>Mais de 72 horas (mais de 3 dias)</span>
                         </label>
                     </div>
                     <div class="input-group">
                         <label>Tempo exato: 
-                            <input type="number" name="duracao_horas" min="0" placeholder="horas">
-                            <input type="number" name="duracao_minutos" min="0" max="59" placeholder="minutos">
+                            <select name="duracao_intensa_unidade" class="duracao-selector">
+                                <option value="">Selecione unidade</option>
+                                <option value="horas">Em horas</option>
+                                <option value="minutos">Em minutos</option>
+                            </select>
+                            <input type="number" name="duracao_intensa_valor" min="0" placeholder="0" style="display:none;" class="duracao-input numero-exato">
+                            <span class="duracao-label" style="display:none;"></span>
                         </label>
                     </div>
                 </div>
@@ -562,14 +571,20 @@
                     <p class="question">Sintomas entre crises (ex: dor leve, fotofobia)?</p>
                     <div class="options">
                         <label class="checkbox-label">
-                            <input type="radio" name="entre_crises" value="sim">
-                            <span>Sim</span>
-                            <input type="number" class="inline-input" placeholder="dias por semana" min="0" max="7">
-                            <input type="number" class="inline-input" placeholder="intensidade /10" min="0" max="10">
+                            <input type="radio" name="entre_crises" value="frequentemente">
+                            <span>Sim, frequentemente (mais da metade dos dias)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="entre_crises" value="metade">
+                            <span>Sim, metade dos dias</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="entre_crises" value="raramente">
+                            <span>Sim, mas raramente (menos de 2 dias por semana)</span>
                         </label>
                         <label class="checkbox-label">
                             <input type="radio" name="entre_crises" value="nao">
-                            <span>Não</span>
+                            <span>Não, sem sintomas entre as crises</span>
                         </label>
                     </div>
                 </div>
@@ -814,5 +829,7 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html> 

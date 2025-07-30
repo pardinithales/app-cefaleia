@@ -378,36 +378,68 @@ function verificarSenha() {
 // Verificar página de resultado
 function verificarPaginaResultado() {
     console.log('Verificando página de resultado...');
-    const urlParams = new URLSearchParams(window.location.search);
     
-    if (urlParams.get('resultado') === 'true') {
-        console.log('URL indica página de resultado');
-        // Verificar se tem dados salvos
-        const dadosSalvos = sessionStorage.getItem('relatorio_completo');
-        console.log('Dados salvos:', dadosSalvos ? 'Existem' : 'Não existem');
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log('URL params:', urlParams.toString());
         
-        if (dadosSalvos) {
-            try {
+        if (urlParams.get('resultado') === 'true') {
+            console.log('URL indica página de resultado');
+            
+            // Verificar se tem dados salvos
+            const dadosSalvos = sessionStorage.getItem('relatorio_completo');
+            console.log('Dados brutos do sessionStorage:', dadosSalvos);
+            
+            if (dadosSalvos) {
+                console.log('Dados existem, tentando parsear...');
                 const dados = JSON.parse(dadosSalvos);
-                console.log('Dados parseados:', dados);
-                // Mostrar tela de resultado
-                mostrarTelaPaciente(dados.id, dados.timestamp);
-                document.getElementById('cefaleiaForm').parentElement.style.display = 'none';
-                document.getElementById('relatorio').style.display = 'block';
-                console.log('Tela de resultado exibida');
-            } catch (error) {
-                console.error('Erro ao carregar dados salvos:', error);
-                // Limpar dados corrompidos e voltar ao formulário
-                sessionStorage.removeItem('relatorio_completo');
+                console.log('Dados parseados com sucesso:', dados);
+                
+                // Verificar se elementos existem
+                const formElement = document.getElementById('cefaleiaForm');
+                const relatorioElement = document.getElementById('relatorio');
+                console.log('Form element:', formElement);
+                console.log('Relatório element:', relatorioElement);
+                
+                if (formElement && relatorioElement) {
+                    console.log('Elementos encontrados, montando tela...');
+                    
+                    // Criar conteúdo simples de teste primeiro
+                    const relatorioConteudo = document.getElementById('relatorio-conteudo');
+                    console.log('Elemento relatorio-conteudo:', relatorioConteudo);
+                    
+                    if (relatorioConteudo) {
+                        // Conteúdo de teste simples
+                        relatorioConteudo.innerHTML = `
+                            <div style="padding: 20px; background: #f0fdf4; border: 2px solid #86efac; border-radius: 15px;">
+                                <h2 style="color: #166534;">✅ Questionário Enviado!</h2>
+                                <p><strong>ID:</strong> #${dados.id}</p>
+                                <p><strong>Data:</strong> ${dados.timestamp}</p>
+                                <button onclick="baixarPDF()" class="btn btn-primary">📄 Baixar PDF</button>
+                                <button onclick="voltarFormulario()" class="btn btn-secondary">← Novo Questionário</button>
+                            </div>
+                        `;
+                        
+                        // Esconder formulário e mostrar relatório
+                        formElement.parentElement.style.display = 'none';
+                        relatorioElement.style.display = 'block';
+                        
+                        console.log('Tela montada com sucesso!');
+                    } else {
+                        console.error('Elemento relatorio-conteudo não encontrado!');
+                    }
+                } else {
+                    console.error('Elementos form ou relatório não encontrados!');
+                }
+            } else {
+                console.log('Nenhum dado encontrado, redirecionando...');
                 window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
-                location.reload();
             }
         } else {
-            console.log('Redirecionando para formulário (sem dados)');
-            // Se não tem dados salvos, voltar ao formulário
-            window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
-            location.reload();
+            console.log('URL não indica página de resultado');
         }
+    } catch (error) {
+        console.error('Erro geral na verificação:', error);
     }
 }
 

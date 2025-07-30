@@ -209,10 +209,7 @@ async function gerarRelatorio() {
             const resultado = await response.json();
             mostrarNotificacao('✅ Dados salvos no banco de dados!', 'success');
             
-            // Mostrar tela do paciente
-            mostrarTelaPaciente(resultado.id, timestamp);
-            
-            // Salvar dados completos para o admin
+            // Salvar dados completos para o admin PRIMEIRO
             const dadosParaSalvar = {
                 id: resultado.id,
                 timestamp: timestamp,
@@ -220,30 +217,48 @@ async function gerarRelatorio() {
             };
             console.log('Salvando dados no sessionStorage:', dadosParaSalvar);
             sessionStorage.setItem('relatorio_completo', JSON.stringify(dadosParaSalvar));
+            
+            // Atualizar URL ANTES de mostrar a tela
+            if (window.history && window.history.pushState) {
+                window.history.pushState({page: 'resultado'}, 'Resultado do Questionário', window.location.pathname + '?resultado=true');
+            }
+            
+            // Agora verificar e mostrar a tela
+            verificarPaginaResultado();
         } else {
             mostrarNotificacao('⚠️ Erro ao salvar no banco de dados', 'error');
-            mostrarTelaPacienteOffline(timestamp, formData);
+            // Salvar dados offline e mostrar tela
+            sessionStorage.setItem('relatorio_completo', JSON.stringify({
+                id: 'OFFLINE',
+                timestamp: timestamp,
+                dados: formData
+            }));
+            
+            if (window.history && window.history.pushState) {
+                window.history.pushState({page: 'resultado'}, 'Resultado do Questionário', window.location.pathname + '?resultado=true');
+            }
+            
+            verificarPaginaResultado();
         }
     } catch (erro) {
         console.error('Erro ao enviar dados:', erro);
         mostrarNotificacao('⚠️ Erro de conexão com o servidor', 'error');
-        mostrarTelaPacienteOffline(timestamp, formData);
+        // Salvar dados offline e mostrar tela
+        sessionStorage.setItem('relatorio_completo', JSON.stringify({
+            id: 'OFFLINE',
+            timestamp: timestamp,
+            dados: formData
+        }));
+        
+        if (window.history && window.history.pushState) {
+            window.history.pushState({page: 'resultado'}, 'Resultado do Questionário', window.location.pathname + '?resultado=true');
+        }
+        
+        verificarPaginaResultado();
     }
-    
-    // Esconder formulário e mostrar relatório
-    const formContainer = document.getElementById('cefaleiaForm').parentElement;
-    const relatorioContainer = document.getElementById('relatorio');
-    
-    formContainer.style.display = 'none';
-    relatorioContainer.style.display = 'block';
     
     // Scroll para o topo
     window.scrollTo(0, 0);
-    
-    // Atualizar URL sem recarregar a página
-    if (window.history && window.history.pushState) {
-        window.history.pushState({page: 'resultado'}, 'Resultado do Questionário', window.location.pathname + '?resultado=true');
-    }
 }
 
 // Tela do paciente após envio
@@ -425,9 +440,10 @@ function verificarPaginaResultado() {
                                 display: block !important;
                                 visibility: visible !important;
                             ">
-                                <h2 style="color: #166534 !important; font-size: 24px !important; margin-bottom: 20px !important;">✅ Questionário Enviado com Sucesso!</h2>
+                                <h2 style="color: #166534 !important; font-size: 24px !important; margin-bottom: 20px !important;">✅ Questionário ${dados.id === 'OFFLINE' ? 'Preenchido (Modo Offline)' : 'Enviado com Sucesso!'}</h2>
                                 <p style="font-size: 18px !important; margin: 10px 0 !important;"><strong>ID:</strong> #${dados.id}</p>
                                 <p style="font-size: 16px !important; margin: 10px 0 !important;"><strong>Data:</strong> ${dados.timestamp}</p>
+                                ${dados.id === 'OFFLINE' ? '<p style="color: #dc2626 !important; font-size: 14px !important;">⚠️ Não foi possível salvar no banco de dados, mas você pode baixar o PDF.</p>' : '<p style="color: #166534 !important; font-size: 14px !important;">O Dr. Thales receberá sua resposta.</p>'}
                                 <div style="margin-top: 30px !important;">
                                     <button onclick="baixarPDF()" style="
                                         padding: 12px 24px !important; 

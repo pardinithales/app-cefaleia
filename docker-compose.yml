@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  app-cefaleia:
+    build: .
+    container_name: app-cefaleia
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      # Volume persistente para o banco de dados
+      - cefaleia-data:/app/data
+    networks:
+      - traefik-network
+    labels:
+      # Habilitar Traefik
+      - "traefik.enable=true"
+      
+      # Roteador HTTP
+      - "traefik.http.routers.cefaleia.rule=Host(`cefaleia.pardinithales.com`)"
+      - "traefik.http.routers.cefaleia.entrypoints=web"
+      - "traefik.http.routers.cefaleia.middlewares=redirect-to-https"
+      
+      # Roteador HTTPS
+      - "traefik.http.routers.cefaleia-secure.rule=Host(`cefaleia.pardinithales.com`)"
+      - "traefik.http.routers.cefaleia-secure.entrypoints=websecure"
+      - "traefik.http.routers.cefaleia-secure.tls=true"
+      - "traefik.http.routers.cefaleia-secure.tls.certresolver=letsencrypt"
+      
+      # Serviço
+      - "traefik.http.services.cefaleia.loadbalancer.server.port=3000"
+      
+      # Middleware de redirecionamento HTTPS
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
+      
+      # Headers de segurança
+      - "traefik.http.middlewares.cefaleia-headers.headers.customFrameOptionsValue=SAMEORIGIN"
+      - "traefik.http.middlewares.cefaleia-headers.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.cefaleia-headers.headers.browserXssFilter=true"
+      - "traefik.http.routers.cefaleia-secure.middlewares=cefaleia-headers"
+
+volumes:
+  cefaleia-data:
+    driver: local
+
+networks:
+  traefik-network:
+    external: true 

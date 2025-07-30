@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app-cefaleia:
+    build: .
+    container_name: app-cefaleia
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      # Volume persistente para o banco de dados
+      - cefaleia-data:/app/data
+    ports:
+      - "3001:3000"  # Mapear para porta 3001 no host se precisar acessar diretamente
+
+volumes:
+  cefaleia-data:
+    driver: local 

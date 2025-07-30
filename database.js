@@ -1,8 +1,13 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
+// Definir caminho do banco de dados (usa /app/data no Docker)
+const dbPath = process.env.NODE_ENV === 'production' 
+    ? path.join('/app/data', 'cefaleia.db')
+    : path.join(__dirname, 'cefaleia.db');
+
 // Criar/conectar ao banco de dados
-const db = new sqlite3.Database(path.join(__dirname, 'cefaleia.db'), (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Erro ao conectar ao banco de dados:', err);
     } else {

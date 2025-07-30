@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionário de Cefaleia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Questionário de Cefaleia: Padrão das Crises Mais Frequentes</h1>
+            <div class="instructions">
+                <p><strong>Instruções:</strong> Este questionário foca no padrão da maioria das suas cefaleias. Marque com ✓ a opção que melhor descreve sua experiência típica. Seja preciso; use números para quantificar (ex: "3 vezes por semana"). Responda baseado nas crises mais comuns nos últimos 3 meses. Preencha sozinho antes da consulta.</p>
+            </div>
+        </header>
+
+        <form id="cefaleiaForm">
+            <!-- Seção 1 -->
+            <section class="form-section">
+                <h3>1. Idade de Início e Frequência Geral</h3>
+                
+                <div class="question-group">
+                    <p class="question">Quando começaram as cefaleias mais frequentes?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="idade_inicio" value="antes_10">
+                            <span>Antes dos 10 anos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="idade_inicio" value="10_20">
+                            <span>Entre 10-20 anos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="idade_inicio" value="20_30">
+                            <span>Entre 20-30 anos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="idade_inicio" value="30_40">
+                            <span>Entre 30-40 anos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="idade_inicio" value="apos_40">
+                            <span>Após 40 anos</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Idade exata: <input type="number" name="idade_exata" min="0" max="120"> anos</label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Quantas crises por mês, em média?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="crises_mes" value="menos_1">
+                            <span>Menos de 1 por mês</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="crises_mes" value="1_4">
+                            <span>1-4 por mês (ex: 1 por semana)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="crises_mes" value="5_14">
+                            <span>5-14 por mês (ex: 2-3 por semana)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="crises_mes" value="15_mais">
+                            <span>15 ou mais por mês (ex: quase todo dia)</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Número exato por mês: <input type="number" name="crises_mes_exato" min="0"></label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Quantos dias por mês você está completamente livre de dor de cabeça e se sente "claro de mente"?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="dias_livre" value="0_5">
+                            <span>0-5 dias</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="dias_livre" value="6_15">
+                            <span>6-15 dias</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="dias_livre" value="16_25">
+                            <span>16-25 dias</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="dias_livre" value="26_30">
+                            <span>26-30 dias</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Número exato: <input type="number" name="dias_livre_exato" min="0" max="31"> dias</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 2 -->
+            <section class="form-section">
+                <h3>2. Sinais de Aviso Antes da Dor (Prodrome ou Aura)</h3>
+                
+                <div class="question-group">
+                    <p class="question">Você tem sinais de aviso até 48 horas antes da dor começar? Marque se sim e quantifique frequência.</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_bocejos">
+                            <span>Bocejos incontroláveis</span>
+                            <input type="number" class="inline-input" placeholder="quantas vezes por crise" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_humor">
+                            <span>Mudança de humor (ex: irritado)</span>
+                            <input type="number" class="inline-input" placeholder="crises afetadas por mês" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_cansaco">
+                            <span>Cansaço extremo</span>
+                            <input type="number" class="inline-input" placeholder="horas antes" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_cognitiva">
+                            <span>Dificuldade cognitiva (ex: confusão)</span>
+                            <input type="number" class="inline-input" placeholder="% das crises" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_comida">
+                            <span>Desejo por comida (ex: chocolate)</span>
+                            <input type="number" class="inline-input" placeholder="crises por mês" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_sede">
+                            <span>Sede ou micção excessiva</span>
+                            <input type="number" class="inline-input" placeholder="copos a mais por dia" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_pescoco">
+                            <span>Dor no pescoço</span>
+                            <input type="number" class="inline-input" placeholder="intensidade inicial /10" min="0" max="10">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aviso_nenhum">
+                            <span>Nenhum sinal</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Sintomas de aura (ex: visuais, sensoriais) antes ou durante a dor?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aura_luzes">
+                            <span>Luzes piscando ou ziguezague</span>
+                            <input type="number" class="inline-input" placeholder="duração em minutos" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aura_formigamento">
+                            <span>Formigamento ou dormência</span>
+                            <input type="text" class="inline-input" placeholder="local">
+                            <input type="number" class="inline-input" placeholder="duração em minutos" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aura_falar">
+                            <span>Dificuldade para falar</span>
+                            <input type="number" class="inline-input" placeholder="duração em minutos" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="aura_nenhum">
+                            <span>Nenhum</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 3 -->
+            <section class="form-section">
+                <h3>3. Início e Localização da Dor</h3>
+                
+                <div class="question-group">
+                    <p class="question">Onde a dor começa tipicamente?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="local_inicio" value="pescoco">
+                            <span>Pescoço e se espalha para frente</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="local_inicio" value="olho_seio">
+                            <span>Ao redor de um olho ou seio</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="local_inicio" value="um_lado">
+                            <span>Um lado da cabeça</span>
+                            <div class="sub-options">
+                                <label>Sempre o mesmo lado? 
+                                    <input type="radio" name="mesmo_lado" value="sim"> Sim
+                                    <input type="radio" name="mesmo_lado" value="nao"> Não
+                                </label>
+                            </div>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="local_inicio" value="ambos">
+                            <span>Ambos os lados</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="local_inicio" value="toda">
+                            <span>Toda a cabeça</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Local exato: <input type="text" name="local_exato"></label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">A dor se espalha ou muda de lado durante a crise?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="dor_espalha" value="lado_oposto">
+                            <span>Sim, para o lado oposto</span>
+                            <input type="number" class="inline-input" placeholder="% das crises" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="dor_espalha" value="bilateral">
+                            <span>Sim, fica bilateral</span>
+                            <input type="number" class="inline-input" placeholder="% das crises" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="dor_espalha" value="nao">
+                            <span>Não, fica no mesmo local</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 4 -->
+            <section class="form-section">
+                <h3>4. Qualidade e Intensidade da Dor</h3>
+                
+                <div class="question-group">
+                    <p class="question">Como é a dor? Marque principal e secundária se aplicável.</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="qualidade_pulsatil">
+                            <span>Pulsátil ou latejante</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="qualidade_pressao">
+                            <span>Pressão ou aperto (ex: faixa apertada)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="qualidade_perfuracao">
+                            <span>Perfuração ou facada (ex: picada de gelo)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="qualidade_queimacao">
+                            <span>Queimação ou dor aguda</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Outra: <input type="text" name="qualidade_outra"></label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <div class="input-group">
+                        <label>Intensidade inicial da dor (escala 0-10): 
+                            <input type="range" name="intensidade_inicial" min="0" max="10" value="5">
+                            <span class="range-value">5</span>/10
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Intensidade máxima (escala 0-10): 
+                            <input type="range" name="intensidade_maxima" min="0" max="10" value="5">
+                            <span class="range-value">5</span>/10
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Tempo para atingir intensidade máxima:</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="tempo_max" value="menos_5">
+                            <span>Menos de 5 minutos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="tempo_max" value="5_30">
+                            <span>5-30 minutos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="tempo_max" value="30_120">
+                            <span>30 minutos a 2 horas</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="tempo_max" value="mais_120">
+                            <span>Mais de 2 horas</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Tempo exato: <input type="number" name="tempo_max_exato" min="0"> minutos</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 5 -->
+            <section class="form-section">
+                <h3>5. Horário e Despertar</h3>
+                
+                <div class="question-group">
+                    <p class="question">Horário típico das crises?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="horario_crise" value="manha">
+                            <span>Ao acordar pela manhã</span>
+                            <input type="number" class="inline-input" placeholder="quantas por semana" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="horario_crise" value="dia">
+                            <span>Durante o dia (ex: tarde)</span>
+                            <input type="time" class="inline-input">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="horario_crise" value="noite">
+                            <span>Noite ou madrugada</span>
+                            <input type="time" class="inline-input">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="horario_crise" value="sem_padrao">
+                            <span>Sem padrão</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">As crises acordam você do sono?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="acorda_sono" value="sim_2_5">
+                            <span>Sim, entre 2-5h da manhã</span>
+                            <input type="number" class="inline-input" placeholder="frequência por semana" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="acorda_sono" value="sim_variado">
+                            <span>Sim, mas não em horário fixo</span>
+                            <input type="number" class="inline-input" placeholder="intensidade ao acordar /10" min="0" max="10">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="acorda_sono" value="nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 6 -->
+            <section class="form-section">
+                <h3>6. Sintomas Associados Durante a Crise</h3>
+                
+                <div class="question-group">
+                    <p class="question">Sintomas comuns? Marque e quantifique intensidade (0-10).</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_fotofobia">
+                            <span>Fotofobia (luz incomoda)</span>
+                            <input type="number" class="inline-input" placeholder="intensidade /10" min="0" max="10">
+                            <label class="sub-label">
+                                Unilateral? <input type="checkbox" name="fotofobia_unilateral">
+                            </label>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_fonofobia">
+                            <span>Fonofobia (ruído incomoda)</span>
+                            <input type="number" class="inline-input" placeholder="intensidade /10" min="0" max="10">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_osmofobia">
+                            <span>Osmofobia (cheiros incomodam)</span>
+                            <input type="number" class="inline-input" placeholder="intensidade /10" min="0" max="10">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_nausea">
+                            <span>Náusea</span>
+                            <input type="number" class="inline-input" placeholder="intensidade /10" min="0" max="10">
+                            <label class="sub-label">
+                                Vomita? <input type="checkbox" name="vomita">
+                                <input type="number" class="inline-input" placeholder="vezes por crise" min="0">
+                            </label>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_olho">
+                            <span>Injeção conjuntival ou lacrimejamento</span>
+                            <input type="text" class="inline-input" placeholder="olho">
+                            <input type="number" class="inline-input" placeholder="% crises" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_nariz">
+                            <span>Nariz entupido ou corrimento</span>
+                            <input type="text" class="inline-input" placeholder="lado">
+                            <input type="number" class="inline-input" placeholder="duração em minutos" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_ptose">
+                            <span>Ptose ou miose</span>
+                            <input type="text" class="inline-input" placeholder="olho">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sintoma_nenhum">
+                            <span>Nenhum</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Pele sensível ao toque durante a crise?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="pele_sensivel" value="sim">
+                            <span>Sim, cabelo dói ou não suporta toque</span>
+                            <input type="text" class="inline-input" placeholder="área">
+                            <input type="number" class="inline-input" placeholder="% crises" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="pele_sensivel" value="nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 7 -->
+            <section class="form-section">
+                <h3>7. Comportamento Durante a Crise</h3>
+                
+                <div class="question-group">
+                    <p class="question">O que você prefere fazer fisicamente durante a crise?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="comportamento" value="deitar">
+                            <span>Deitar imóvel no escuro e quieto</span>
+                            <input type="number" class="inline-input" placeholder="duração preferida em horas" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="comportamento" value="sentar">
+                            <span>Sentar quieto</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="comportamento" value="andar">
+                            <span>Andar ou se mexer (ex: balançar)</span>
+                            <input type="number" class="inline-input" placeholder="% crises" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="comportamento" value="nenhum">
+                            <span>Nenhum preferido</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">A dor piora com atividade?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="piora_atividade" value="sim">
+                            <span>Sim</span>
+                            <input type="number" class="inline-input" placeholder="piora em /10 ao se mover" min="0" max="10">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="piora_atividade" value="nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 8 -->
+            <section class="form-section">
+                <h3>8. Duração e Pós-Crise</h3>
+                
+                <div class="question-group">
+                    <p class="question">Quanto tempo dura a dor intensa?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="duracao" value="15_180">
+                            <span>15-180 minutos</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="duracao" value="4_72">
+                            <span>4-72 horas</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="duracao" value="mais_72">
+                            <span>Mais de 72 horas</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Tempo exato: 
+                            <input type="number" name="duracao_horas" min="0" placeholder="horas">
+                            <input type="number" name="duracao_minutos" min="0" max="59" placeholder="minutos">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Como se sente após a dor intensa acabar?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pos_fadiga">
+                            <span>Fadiga ou "ressaca"</span>
+                            <input type="number" class="inline-input" placeholder="duração em horas" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pos_confusao">
+                            <span>Confusão cognitiva</span>
+                            <input type="number" class="inline-input" placeholder="duração em horas" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pos_fome">
+                            <span>Fome ou sintomas gastrointestinais (ex: diarreia)</span>
+                            <input type="number" class="inline-input" placeholder="% crises" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pos_normal">
+                            <span>Volta ao normal imediatamente</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Sintomas entre crises (ex: dor leve, fotofobia)?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="entre_crises" value="sim">
+                            <span>Sim</span>
+                            <input type="number" class="inline-input" placeholder="dias por semana" min="0" max="7">
+                            <input type="number" class="inline-input" placeholder="intensidade /10" min="0" max="10">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="entre_crises" value="nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 9 -->
+            <section class="form-section">
+                <h3>9. Gatilhos Identificados</h3>
+                
+                <div class="question-group">
+                    <p class="question">O que desencadeia crises? Marque e quantifique exposição (ex: vezes por semana).</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gatilho_estresse">
+                            <span>Estresse (durante ou após)</span>
+                            <input type="number" class="inline-input" placeholder="vezes por semana" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gatilho_sono">
+                            <span>Mudança no sono (ex: dormir menos)</span>
+                            <input type="number" class="inline-input" placeholder="horas a menos" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gatilho_refeicao">
+                            <span>Pular refeições</span>
+                            <input type="number" class="inline-input" placeholder="vezes por semana" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gatilho_alcool">
+                            <span>Álcool</span>
+                            <input type="number" class="inline-input" placeholder="quantidade (doses)" min="0">
+                            <input type="number" class="inline-input" placeholder="% exposições" min="0" max="100">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gatilho_odor">
+                            <span>Odores fortes (ex: perfume)</span>
+                            <input type="number" class="inline-input" placeholder="exposições por semana" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gatilho_tempo">
+                            <span>Tempo (ex: calor)</span>
+                            <input type="number" class="inline-input" placeholder="dias por mês" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gatilho_nenhum">
+                            <span>Nenhum identificado</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 10 -->
+            <section class="form-section">
+                <h3>10. Impacto na Vida</h3>
+                
+                <div class="question-group">
+                    <p class="question">Quantos dias por mês a cefaleia impede trabalho/escola/atividades?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="impacto_dias" value="0_3">
+                            <span>0-3 dias</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="impacto_dias" value="4_9">
+                            <span>4-9 dias</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="impacto_dias" value="10_mais">
+                            <span>10 ou mais</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Número exato: <input type="number" name="impacto_dias_exato" min="0"> dias</label>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <p class="question">Impacto entre crises (ex: medo da próxima)?</p>
+                    <div class="options">
+                        <label class="checkbox-label">
+                            <input type="radio" name="impacto_entre" value="sim">
+                            <span>Sim</span>
+                            <input type="number" class="inline-input" placeholder="altera planos X vezes por mês" min="0">
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="radio" name="impacto_entre" value="nao">
+                            <span>Não</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-footer">
+                <div class="input-group">
+                    <label>Data: <input type="date" name="data" required></label>
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="salvarRascunho()">Salvar Rascunho</button>
+                    <button type="button" class="btn btn-primary" onclick="gerarRelatorio()">Gerar Relatório</button>
+                    <button type="button" class="btn btn-info" onclick="imprimirFormulario()">Imprimir</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="relatorio" class="relatorio-container" style="display: none;">
+            <h2>Relatório do Questionário</h2>
+            <div id="relatorio-conteudo"></div>
+            <button type="button" class="btn btn-secondary" onclick="voltarFormulario()">Voltar ao Formulário</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

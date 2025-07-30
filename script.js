@@ -282,6 +282,9 @@ function mostrarTelaPaciente(id, timestamp) {
                      <button onclick="baixarPDF()" class="btn btn-primary" style="margin-right: 10px;">
                          📄 Baixar PDF do Questionário
                      </button>
+                     <button onclick="enviarEmail()" class="btn btn-success" style="margin-right: 10px;">
+                         📧 Enviar por E-mail
+                     </button>
                      <button onclick="mostrarAreaAdmin()" class="btn btn-secondary" style="margin-right: 10px;">
                          🔐 Área do Médico
                      </button>
@@ -334,6 +337,9 @@ function mostrarTelaPacienteOffline(timestamp, formData) {
                                  <div style="margin-top: 30px;">
                      <button onclick="baixarPDF()" class="btn btn-primary" style="margin-right: 10px;">
                          📄 Baixar PDF do Questionário
+                     </button>
+                     <button onclick="enviarEmail()" class="btn btn-success" style="margin-right: 10px;">
+                         📧 Enviar por E-mail
                      </button>
                      <button onclick="voltarFormulario()" class="btn" style="background: #6b7280; color: white;">
                          ← Novo Questionário
@@ -432,19 +438,29 @@ function verificarPaginaResultado() {
                                 ${dados.id === 'OFFLINE' ? '<p style="color: #dc2626 !important; font-size: 14px !important;">⚠️ Não foi possível salvar no banco de dados, mas você pode baixar o PDF.</p>' : '<p style="color: #166534 !important; font-size: 14px !important;">O Dr. Thales receberá sua resposta.</p>'}
                                 <div style="margin-top: 30px !important;">
                                     <button onclick="baixarPDF()" style="
-                                        padding: 12px 24px !important; 
-                                        background: #3b82f6 !important; 
-                                        color: white !important; 
-                                        border: none !important; 
-                                        border-radius: 8px !important; 
+                                        padding: 12px 24px !important;
+                                        background: #3b82f6 !important;
+                                        color: white !important;
+                                        border: none !important;
+                                        border-radius: 8px !important;
                                         cursor: pointer !important;
                                         margin-right: 10px !important;
                                         font-size: 16px !important;
                                     ">📄 Baixar PDF</button>
+                                    <button onclick="enviarEmail()" style="
+                                        padding: 12px 24px !important;
+                                        background: #10b981 !important;
+                                        color: white !important;
+                                        border: none !important;
+                                        border-radius: 8px !important;
+                                        cursor: pointer !important;
+                                        margin-right: 10px !important;
+                                        font-size: 16px !important;
+                                    ">📧 Enviar por E-mail</button>
                                     <button onclick="voltarFormulario()" style="
-                                        padding: 12px 24px !important; 
-                                        background: #6b7280 !important; 
-                                        color: white !important; 
+                                        padding: 12px 24px !important;
+                                        background: #6b7280 !important;
+                                        color: white !important;
                                         border: none !important; 
                                         border-radius: 8px !important; 
                                         cursor: pointer !important;
@@ -1335,6 +1351,19 @@ function baixarPDF() {
     // Salvar PDF
     const nomeArquivo = `questionario_cefaleia_${dadosSalvos.id}_${new Date().toISOString().split('T')[0]}.pdf`;
     doc.save(nomeArquivo);
+}
+
+// Abrir cliente de email com informações básicas
+function enviarEmail() {
+    const dadosSalvos = JSON.parse(sessionStorage.getItem('relatorio_completo'));
+    if (!dadosSalvos) {
+        alert('Salve o PDF antes de enviar.');
+        return;
+    }
+
+    const assunto = encodeURIComponent('Questionário de Cefaleia');
+    const corpo = encodeURIComponent(`Olá Dr. Thales,%0D%0Asegue em anexo o PDF do meu questionário.%0D%0AID: ${dadosSalvos.id}%0D%0AData: ${dadosSalvos.timestamp}`);
+    window.location.href = `mailto:dr.thales@example.com?subject=${assunto}&body=${corpo}`;
 }
 
 // Configurar exclusividade entre número exato e opções múltiplas

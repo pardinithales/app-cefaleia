@@ -468,20 +468,48 @@ function verificarPaginaResultado() {
                             </div>
                         `;
                         
-                        // Forçar visibilidade com CSS extremo
-                        formElement.parentElement.style.cssText = 'display: none !important;';
-                        relatorioElement.style.cssText = `
-                            display: block !important;
-                            visibility: visible !important;
-                            position: relative !important;
-                            z-index: 1000 !important;
-                            width: 100% !important;
-                            min-height: 400px !important;
-                            background: white !important;
-                            padding: 20px !important;
-                        `;
+                                                 // Forçar visibilidade com CSS extremo
+                         formElement.parentElement.style.cssText = 'display: none !important;';
+                         
+                         // Remover qualquer style inline que possa interferir
+                         relatorioElement.removeAttribute('style');
+                         
+                         // Aplicar CSS forçado
+                         relatorioElement.style.cssText = `
+                             display: block !important;
+                             visibility: visible !important;
+                             position: relative !important;
+                             z-index: 1000 !important;
+                             width: 100% !important;
+                             min-height: 400px !important;
+                             background: white !important;
+                             padding: 20px !important;
+                             opacity: 1 !important;
+                         `;
+                         
+                         // Verificar imediatamente
+                         console.log('CSS aplicado:', relatorioElement.style.cssText);
                         
-                        console.log('Tela montada com sucesso!');
+                                                 console.log('Tela montada com sucesso!');
+                         
+                         // Verificação final e força extrema
+                         console.log('Estado final do relatório:', relatorioElement.style.display);
+                         
+                         // Se ainda estiver oculto, forçar com timeout
+                         setTimeout(() => {
+                             relatorioElement.style.cssText = `
+                                 display: block !important;
+                                 visibility: visible !important;
+                                 position: relative !important;
+                                 z-index: 10000 !important;
+                                 width: 100% !important;
+                                 min-height: 400px !important;
+                                 background: white !important;
+                                 padding: 20px !important;
+                                 opacity: 1 !important;
+                             `;
+                             console.log('Forçado novamente após timeout:', relatorioElement.style.display);
+                         }, 50);
                     } else {
                         console.error('Elemento relatorio-conteudo não encontrado!');
                     }

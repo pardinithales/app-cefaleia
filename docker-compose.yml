@@ -18,12 +18,12 @@ services:
       - "traefik.enable=true"
       
       # Roteador HTTP
-      - "traefik.http.routers.cefaleia.rule=Host(`cefaleia.pardinithales.com`)"
+      - "traefik.http.routers.cefaleia.rule=Host(`minhador.tpfbrain.com`)"
       - "traefik.http.routers.cefaleia.entrypoints=web"
       - "traefik.http.routers.cefaleia.middlewares=redirect-to-https"
       
       # Roteador HTTPS
-      - "traefik.http.routers.cefaleia-secure.rule=Host(`cefaleia.pardinithales.com`)"
+      - "traefik.http.routers.cefaleia-secure.rule=Host(`minhador.tpfbrain.com`)"
       - "traefik.http.routers.cefaleia-secure.entrypoints=websecure"
       - "traefik.http.routers.cefaleia-secure.tls=true"
       - "traefik.http.routers.cefaleia-secure.tls.certresolver=letsencrypt"

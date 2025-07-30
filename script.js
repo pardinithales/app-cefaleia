@@ -1,25 +1,5 @@
 // Atualizar valores dos sliders em tempo real
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar se está na página de resultado
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('resultado') === 'true') {
-        // Se chegou aqui via URL direto e tem resultado, mostrar mensagem
-        const relatorioContainer = document.getElementById('relatorio');
-        if (relatorioContainer && relatorioContainer.style.display === 'none') {
-            // Verificar se tem dados salvos
-            const dadosSalvos = sessionStorage.getItem('relatorio_completo');
-            if (dadosSalvos) {
-                const dados = JSON.parse(dadosSalvos);
-                mostrarTelaPaciente(dados.id, dados.timestamp);
-                document.getElementById('cefaleiaForm').parentElement.style.display = 'none';
-                document.getElementById('relatorio').style.display = 'block';
-            } else {
-                // Se não tem dados salvos, voltar ao formulário
-                window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
-            }
-        }
-    }
-
     // Configurar sliders de intensidade
     const sliders = document.querySelectorAll('input[type="range"]');
     sliders.forEach(slider => {
@@ -46,6 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
     configurarCalculoGAD7();
     configurarPoscriseExclusivo();
     configurarSelectoresDuracao();
+
+    // Verificar se está na página de resultado (depois de tudo configurado)
+    setTimeout(function() {
+        verificarPaginaResultado();
+    }, 100);
 });
 
 // Handler para o botão voltar do navegador
@@ -228,11 +213,13 @@ async function gerarRelatorio() {
             mostrarTelaPaciente(resultado.id, timestamp);
             
             // Salvar dados completos para o admin
-            sessionStorage.setItem('relatorio_completo', JSON.stringify({
+            const dadosParaSalvar = {
                 id: resultado.id,
                 timestamp: timestamp,
                 dados: formData
-            }));
+            };
+            console.log('Salvando dados no sessionStorage:', dadosParaSalvar);
+            sessionStorage.setItem('relatorio_completo', JSON.stringify(dadosParaSalvar));
         } else {
             mostrarNotificacao('⚠️ Erro ao salvar no banco de dados', 'error');
             mostrarTelaPacienteOffline(timestamp, formData);
@@ -385,6 +372,42 @@ function verificarSenha() {
         // Senha incorreta
         document.getElementById('senha-erro').style.display = 'block';
         document.getElementById('senha-admin').value = '';
+    }
+}
+
+// Verificar página de resultado
+function verificarPaginaResultado() {
+    console.log('Verificando página de resultado...');
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.get('resultado') === 'true') {
+        console.log('URL indica página de resultado');
+        // Verificar se tem dados salvos
+        const dadosSalvos = sessionStorage.getItem('relatorio_completo');
+        console.log('Dados salvos:', dadosSalvos ? 'Existem' : 'Não existem');
+        
+        if (dadosSalvos) {
+            try {
+                const dados = JSON.parse(dadosSalvos);
+                console.log('Dados parseados:', dados);
+                // Mostrar tela de resultado
+                mostrarTelaPaciente(dados.id, dados.timestamp);
+                document.getElementById('cefaleiaForm').parentElement.style.display = 'none';
+                document.getElementById('relatorio').style.display = 'block';
+                console.log('Tela de resultado exibida');
+            } catch (error) {
+                console.error('Erro ao carregar dados salvos:', error);
+                // Limpar dados corrompidos e voltar ao formulário
+                sessionStorage.removeItem('relatorio_completo');
+                window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
+                location.reload();
+            }
+        } else {
+            console.log('Redirecionando para formulário (sem dados)');
+            // Se não tem dados salvos, voltar ao formulário
+            window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
+            location.reload();
+        }
     }
 }
 

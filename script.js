@@ -1,5 +1,25 @@
 // Atualizar valores dos sliders em tempo real
 document.addEventListener('DOMContentLoaded', function() {
+    // Verificar se está na página de resultado
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('resultado') === 'true') {
+        // Se chegou aqui via URL direto e tem resultado, mostrar mensagem
+        const relatorioContainer = document.getElementById('relatorio');
+        if (relatorioContainer && relatorioContainer.style.display === 'none') {
+            // Verificar se tem dados salvos
+            const dadosSalvos = sessionStorage.getItem('relatorio_completo');
+            if (dadosSalvos) {
+                const dados = JSON.parse(dadosSalvos);
+                mostrarTelaPaciente(dados.id, dados.timestamp);
+                document.getElementById('cefaleiaForm').parentElement.style.display = 'none';
+                document.getElementById('relatorio').style.display = 'block';
+            } else {
+                // Se não tem dados salvos, voltar ao formulário
+                window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
+            }
+        }
+    }
+
     // Configurar sliders de intensidade
     const sliders = document.querySelectorAll('input[type="range"]');
     sliders.forEach(slider => {
@@ -26,6 +46,21 @@ document.addEventListener('DOMContentLoaded', function() {
     configurarCalculoGAD7();
     configurarPoscriseExclusivo();
     configurarSelectoresDuracao();
+});
+
+// Handler para o botão voltar do navegador
+window.addEventListener('popstate', function(event) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('resultado') !== 'true') {
+        // Se não está na página de resultado, mostrar formulário
+        const relatorioContainer = document.getElementById('relatorio');
+        const formContainer = document.getElementById('cefaleiaForm').parentElement;
+        
+        if (relatorioContainer.style.display !== 'none') {
+            relatorioContainer.style.display = 'none';
+            formContainer.style.display = 'block';
+        }
+    }
 });
 
 // Configurar opções mutuamente exclusivas
@@ -208,11 +243,20 @@ async function gerarRelatorio() {
         mostrarTelaPacienteOffline(timestamp, formData);
     }
     
-    document.getElementById('cefaleiaForm').parentElement.style.display = 'none';
-    document.getElementById('relatorio').style.display = 'block';
+    // Esconder formulário e mostrar relatório
+    const formContainer = document.getElementById('cefaleiaForm').parentElement;
+    const relatorioContainer = document.getElementById('relatorio');
+    
+    formContainer.style.display = 'none';
+    relatorioContainer.style.display = 'block';
     
     // Scroll para o topo
     window.scrollTo(0, 0);
+    
+    // Atualizar URL sem recarregar a página
+    if (window.history && window.history.pushState) {
+        window.history.pushState({page: 'resultado'}, 'Resultado do Questionário', window.location.pathname + '?resultado=true');
+    }
 }
 
 // Tela do paciente após envio
@@ -233,14 +277,17 @@ function mostrarTelaPaciente(id, timestamp) {
                     O Dr. Thales receberá sua resposta e analisará as informações durante sua consulta.
                 </p>
                 
-                <div style="margin-top: 30px;">
-                    <button onclick="baixarPDF()" class="btn btn-primary" style="margin-right: 10px;">
-                        📄 Baixar PDF do Questionário
-                    </button>
-                    <button onclick="mostrarAreaAdmin()" class="btn btn-secondary">
-                        🔐 Área do Médico
-                    </button>
-                </div>
+                                 <div style="margin-top: 30px;">
+                     <button onclick="baixarPDF()" class="btn btn-primary" style="margin-right: 10px;">
+                         📄 Baixar PDF do Questionário
+                     </button>
+                     <button onclick="mostrarAreaAdmin()" class="btn btn-secondary" style="margin-right: 10px;">
+                         🔐 Área do Médico
+                     </button>
+                     <button onclick="voltarFormulario()" class="btn" style="background: #6b7280; color: white;">
+                         ← Novo Questionário
+                     </button>
+                 </div>
             </div>
         </div>
         
@@ -283,11 +330,14 @@ function mostrarTelaPacienteOffline(timestamp, formData) {
                     Data e hora: ${timestamp}
                 </p>
                 
-                <div style="margin-top: 30px;">
-                    <button onclick="baixarPDF()" class="btn btn-primary">
-                        📄 Baixar PDF do Questionário
-                    </button>
-                </div>
+                                 <div style="margin-top: 30px;">
+                     <button onclick="baixarPDF()" class="btn btn-primary" style="margin-right: 10px;">
+                         📄 Baixar PDF do Questionário
+                     </button>
+                     <button onclick="voltarFormulario()" class="btn" style="background: #6b7280; color: white;">
+                         ← Novo Questionário
+                     </button>
+                 </div>
             </div>
         </div>
     `;
@@ -338,16 +388,43 @@ function verificarSenha() {
     }
 }
 
+// Voltar ao formulário
+function voltarFormulario() {
+    // Limpar dados da sessão
+    sessionStorage.removeItem('relatorio_completo');
+    
+    // Esconder relatório e mostrar formulário
+    document.getElementById('relatorio').style.display = 'none';
+    document.getElementById('cefaleiaForm').parentElement.style.display = 'block';
+    
+    // Limpar formulário
+    document.getElementById('cefaleiaForm').reset();
+    
+    // Atualizar URL
+    window.history.replaceState({}, 'Questionário de Cefaleia', window.location.pathname);
+    
+    // Scroll para o topo
+    window.scrollTo(0, 0);
+    
+    // Reconfigurar validações
+    configurarOpcoesMutuamenteExclusivas();
+    configurarNumeroExatoExclusivo();
+    configurarAuraSubPerguntas();
+    configurarCalculoMIDAS();
+    configurarCalculoGAD7();
+    configurarPoscriseExclusivo();
+    configurarSelectoresDuracao();
+}
+
 // Enter para submeter senha
 document.addEventListener('DOMContentLoaded', function() {
-    const senhaInput = document.getElementById('senha-admin');
-    if (senhaInput) {
-        senhaInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                verificarSenha();
-            }
-        });
-    }
+    // Configurar listener para senha admin se existir
+    document.addEventListener('keypress', function(e) {
+        const senhaInput = document.getElementById('senha-admin');
+        if (senhaInput && e.key === 'Enter' && document.activeElement === senhaInput) {
+            verificarSenha();
+        }
+    });
 });
 
 // Coletar dados do formulário de forma organizada

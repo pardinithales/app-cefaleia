@@ -4,14 +4,18 @@
 Formulário interativo e responsivo para coleta de dados sobre cefaleias (dores de cabeça), desenvolvido para facilitar o preenchimento e análise de informações médicas.
 
 ## ✨ Funcionalidades
-- ✅ Formulário completo com 10 seções
+- ✅ Formulário completo com 10 seções otimizadas
 - 💾 Salvamento automático de rascunho
 - 📊 Geração de relatório formatado
 - 🖨️ Impressão otimizada
 - 📱 Design responsivo
 - 🎨 Interface moderna e intuitiva
-- 🗄️ **NOVO:** Banco de dados SQLite integrado
-- 📈 **NOVO:** Dashboard com estatísticas e visualização de respostas
+- 🗄️ Banco de dados SQLite integrado
+- 📈 Dashboard com estatísticas e visualização de respostas
+- 🧠 **NOVO:** Escalas MIDAS e GAD-7 integradas com cálculo automático
+- ⚡ **NOVO:** Validações inteligentes e campos exclusivos
+- 🔄 **NOVO:** Sub-perguntas dinâmicas baseadas nas respostas
+- 📋 **NOVO:** Campos de texto explicativos e melhor UX
 
 ## 🚀 Deploy Rápido
 

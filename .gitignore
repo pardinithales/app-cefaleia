@@ -33,4 +33,7 @@ Thumbs.db
 # Temporary files
 temp/
 tmp/
-.cache/ 
+.cache/
+
+# Documentation with sensitive info (runs on VPS only)
+CLAUDE.md

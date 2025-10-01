@@ -39,8 +39,8 @@ window.addEventListener('popstate', function(event) {
     if (urlParams.get('resultado') !== 'true') {
         // Se não está na página de resultado, mostrar formulário
         const relatorioContainer = document.getElementById('relatorio');
-        const formContainer = document.getElementById('cefaleiaForm').parentElement;
-        
+        const formContainer = document.getElementById('cefaleiaForm');
+
         if (relatorioContainer.style.display !== 'none') {
             relatorioContainer.style.display = 'none';
             formContainer.style.display = 'block';
@@ -454,12 +454,12 @@ function verificarPaginaResultado() {
                             </div>
                         `;
                         
-                                                 // Forçar visibilidade com CSS extremo
-                         formElement.parentElement.style.cssText = 'display: none !important;';
-                         
+                                                 // Esconder apenas o formulário (não o container pai)
+                         formElement.style.cssText = 'display: none !important;';
+
                          // Remover qualquer style inline que possa interferir
                          relatorioElement.removeAttribute('style');
-                         
+
                          // Aplicar CSS forçado
                          relatorioElement.style.cssText = `
                              display: block !important;
@@ -495,10 +495,10 @@ function verificarPaginaResultado() {
 function voltarFormulario() {
     // Limpar dados da sessão
     sessionStorage.removeItem('relatorio_completo');
-    
+
     // Esconder relatório e mostrar formulário
     document.getElementById('relatorio').style.display = 'none';
-    document.getElementById('cefaleiaForm').parentElement.style.display = 'block';
+    document.getElementById('cefaleiaForm').style.display = 'block';
     
     // Limpar formulário
     document.getElementById('cefaleiaForm').reset();

@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'drthalesneuro@gmail.com',
-        pass: 'pqbl ucai gxdv cugk'
+        pass: 'pqblucaigxdvcugk'  // App password sem espaços
     }
 });
 
@@ -170,6 +170,7 @@ app.post('/api/respostas', async (req, res) => {
             const respostaId = this.lastID;
 
             // Enviar email com os dados do formulário
+            console.log(`📧 Tentando enviar email para questionário #${respostaId}...`);
             const emailHtml = formatarDadosParaEmail(dados, respostaId);
 
             const mailOptions = {

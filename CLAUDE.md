@@ -211,3 +211,175 @@ docker-compose restart app-cefaleia
 - 7 questions about anxiety over last 2 weeks
 - 4-point scale (0-3) with automatic calculation
 - Levels: minimal (0-4), mild (5-9), moderate (10-14), severe (15-21)
+
+---
+
+## 📌 CHECKPOINT: Implementações - 01/Out/2025
+
+### Problema 1: Tela em Branco após "Gerar Relatório" ❌ → ✅
+
+**Sintoma**: Ao clicar em "Gerar Relatório", a página ficava completamente em branco.
+
+**Causa Raiz**:
+- O código estava escondendo `formElement.parentElement` (o `<div class="container">`)
+- Este container contém TANTO o formulário quanto a área de relatório
+- Resultado: tudo ficava invisível
+
+**Solução Implementada** (script.js):
+```javascript
+// ANTES (errado):
+formElement.parentElement.style.cssText = 'display: none !important;';
+
+// DEPOIS (correto):
+formElement.style.cssText = 'display: none !important;';
+```
+
+**Arquivos Modificados**:
+- `script.js` - 3 funções corrigidas:
+  - `verificarPaginaResultado()` linha 458
+  - `voltarFormulario()` linha 501
+  - `popstate` handler linha 42
+
+**Commit**: `9518cf7` - "Corrige tela em branco após gerar relatório"
+
+---
+
+### Problema 2: Notificação por Email Ausente ❌ → ✅
+
+**Requisito**: Receber email automático ao receber novo questionário preenchido.
+
+**Implementação**:
+
+1. **Instalação do Nodemailer**:
+   ```bash
+   npm install nodemailer
+   ```
+
+2. **Configuração SMTP Gmail** (server.js:11-23):
+   ```javascript
+   const transporter = nodemailer.createTransport({
+       host: 'smtp.gmail.com',
+       port: 587,
+       secure: false,
+       auth: {
+           user: 'drthalesneuro@gmail.com',
+           pass: 'pqblucaigxdvcugk'  // App password (16 chars, sem espaços)
+       },
+       tls: {
+           rejectUnauthorized: false
+       }
+   });
+   ```
+
+3. **Função de Formatação** (server.js:26-123):
+   - `formatarDadosParaEmail(dados, id)`: Gera HTML formatado
+   - Inclui: dados principais, aura, localização, MIDAS, GAD-7
+   - Link direto para dashboard com senha
+
+4. **Envio Automático** (server.js:172-193):
+   - Email enviado após salvar no banco (callback do `db.run`)
+   - Não bloqueia a resposta ao usuário se email falhar
+   - Logs detalhados de sucesso/erro
+
+**Formato do Email**:
+- Assunto: `📋 Novo Questionário de Cefaleia #[ID]`
+- Destinatário: `drthalesneuro@gmail.com`
+- Conteúdo HTML com seções organizadas e styled
+- Footer com link para dashboard e senha
+
+**Commits**:
+- `99c11ed` - "Implementa notificação por email"
+- `90cfe7b` - "Corrige senha de app Gmail (remove espaços)"
+- `e28af58` - "Adiciona logs detalhados de erro e sucesso"
+- `dc1374e` - "Configura SMTP direto ao invés de service gmail"
+
+**Nota Importante - Configuração SMTP**:
+- ❌ `service: 'gmail'` → NÃO funciona no Docker/VPS
+- ✅ Configuração direta com `host`, `port`, `tls` → FUNCIONA
+
+---
+
+### Testes Realizados
+
+**Teste #10** (dados mínimos):
+- ✅ Salvou no banco
+- ✅ Email enviado com sucesso
+- ✅ Message ID: `c3ac59db-1f7a-5492-af88-b30876a057db@gmail.com`
+
+**Teste #11** (dados completos):
+- ✅ Todos os campos preenchidos (aura, MIDAS, GAD-7, gatilhos)
+- ✅ Email formatado com todas as seções
+- ✅ Recebido em `drthalesneuro@gmail.com`
+
+---
+
+### Deploy Seguro Realizado
+
+**Processo seguido** (sem afetar Louis):
+```bash
+# 1. Stop APENAS app-cefaleia
+docker-compose down
+# Output: "Network louis-final_louis_net is external, skipping" ✅
+
+# 2. Rebuild
+docker-compose build --no-cache
+
+# 3. Start
+docker-compose up -d
+
+# 4. Verificar
+docker-compose ps  # app-cefaleia: Up (healthy)
+docker ps | grep louis  # Louis containers: Up 9 days ✅
+```
+
+**Verificações Pós-Deploy**:
+- ✅ App Cefaleia: Funcionando (HTTP/2 200)
+- ✅ Louis Frontend: Running (Up 9 days)
+- ✅ Louis Backend: Running (Up 9 days)
+- ✅ Traefik: Running (Up 9 days)
+- ✅ Certificados SSL: Válidos
+
+---
+
+### Configuração de Email - Referência Rápida
+
+**Credenciais Gmail**:
+- Email: `drthalesneuro@gmail.com`
+- App Password: `pqbl ucai gxdv cugk` (com espaços para leitura)
+- App Password (código): `pqblucaigxdvcugk` (16 chars sem espaços - usar no código)
+
+**Como gerar nova app password** (se necessário):
+1. Google Account → Security → 2-Step Verification
+2. App passwords → Select app: Mail → Select device: Other
+3. Nome: "App Cefaleia VPS" → Generate
+4. Copiar senha de 16 caracteres (remover espaços no código)
+
+**Testar envio de email**:
+```bash
+# Via curl (do host VPS):
+curl -X POST https://minhador.tpfbrain.com/api/respostas \
+  -H "Content-Type: application/json" \
+  -d '{"idadeInicio":"20_30","crisesMesExato":"5","intensidadeMaxima":"7"}'
+
+# Verificar logs:
+docker logs app-cefaleia --tail=30 | grep -E "Email|enviado|erro"
+```
+
+---
+
+### Próximas Manutenções
+
+**Se email parar de funcionar**:
+1. Verificar se app password ainda é válido (Google pode revogar)
+2. Verificar logs: `docker logs app-cefaleia | grep -i email`
+3. Testar conexão SMTP: `docker exec app-cefaleia nc -zv smtp.gmail.com 587`
+4. Regenerar app password se necessário
+
+**Se precisar mudar email destino**:
+- Modificar `server.js` linha 177: `to: 'novo@email.com'`
+- Rebuild e redeploy
+
+**Backup da configuração atual** (01/Out/2025):
+- Email funciona com SMTP direto (host/port/tls)
+- App password: válido e testado
+- Todos os testes (#10, #11) bem-sucedidos

@@ -358,6 +358,9 @@ docker ps | grep louis  # Louis containers: Up 9 days ✅
 - App Password: `pqbl ucai gxdv cugk` (com espaços para leitura)
 - App Password (código): `pqblucaigxdvcugk` (16 chars sem espaços - usar no código)
 
+**Nota**: Senhas estão hardcoded em `server.js` (linha 18) e `dashboard.html/script.js` (senha: tpb801).
+Para implementações futuras sensíveis à segurança, considerar uso de variáveis de ambiente (.env + dotenv).
+
 **Como gerar nova app password** (se necessário):
 1. Google Account → Security → 2-Step Verification
 2. App passwords → Select app: Mail → Select device: Other
@@ -688,6 +691,13 @@ CLAUDE.md          | 300 +++++  (criado + 3 atualizações)
 ## 📅 Próxima Sessão - Sugestões
 
 Possíveis melhorias para futuras implementações:
+
+### ⚠️ Lembrete para Futuras Instâncias do Claude Code
+**Ao trabalhar com senhas e credenciais**:
+- NÃO incluir senhas/tokens em commits
+- Usar variáveis de ambiente (.env) quando possível
+- Verificar com usuário antes de commitar arquivos com credenciais
+- Sugerir uso de dotenv para novos projetos com dados sensíveis
 
 ### Funcionalidades
 - [ ] Adicionar anexo PDF ao email (jsPDF)

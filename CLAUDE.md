@@ -9,43 +9,78 @@ Interactive headache (cefaleia) questionnaire form for medical data collection, 
 **Production URL**: https://minhador.tpfbrain.com
 **Repository**: https://github.com/pardinithales/app-cefaleia.git
 
-## Development Commands
+## ⚠️ CRITICAL: VPS Environment
+
+**This application runs on a VPS (Virtual Private Server), NOT a local development machine.**
+
+- **NO LOCAL TESTING**: Do not assume `http://localhost:3000` is accessible. The server is production-only.
+- **Testing happens in production**: After making changes, you MUST deploy to Docker to test.
+- **Shared infrastructure**: This VPS also hosts the "Louis" application on the same Docker network.
+
+## Development Workflow (VPS-specific)
 
 ```bash
-# Install dependencies
+# 1. Install dependencies (if needed)
 npm install
 
-# Start server (development)
-npm start
-# Server runs on http://localhost:3000
-# Dashboard available at http://localhost:3000/dashboard
+# 2. Make code changes to files (index.html, script.js, etc.)
 
-# Start with auto-reload (if using nodemon)
-npm run dev
+# 3. Test changes by deploying to Docker (see Deployment section below)
+# DO NOT run `npm start` for testing - this is a production VPS
 ```
 
-## Deployment
+## Deployment (Production on VPS)
 
-### Docker Deployment (Production)
-The application is deployed using Docker with Traefik reverse proxy:
+### 🚨 CRITICAL: Safe Deployment Process
+
+**This application shares the Docker network `louis-final_louis_net` with the Louis application. Follow these steps carefully to avoid disrupting Louis:**
 
 ```bash
-# Deploy to production server
-./deploy.sh
+# SAFE deployment process (does NOT affect Louis):
 
-# Manual Docker commands
+# 1. Stop ONLY the cefaleia container
 docker-compose down
+
+# 2. Rebuild ONLY the cefaleia image
 docker-compose build --no-cache
+
+# 3. Start ONLY the cefaleia container
 docker-compose up -d
 
-# View logs
-docker-compose logs -f
-
-# Check container status
+# 4. Verify cefaleia is running
 docker-compose ps
+
+# 5. Check logs for errors
+docker-compose logs -f app-cefaleia
+
+# 6. Test the application at https://minhador.tpfbrain.com
 ```
 
-**Important**: The application connects to an external Docker network `louis-final_louis_net` with Traefik handling SSL certificates and routing.
+### Alternative: Use deploy script
+```bash
+# The deploy.sh script automates the above process
+./deploy.sh
+```
+
+### Docker Network Configuration
+
+**CRITICAL**: The `docker-compose.yml` uses an **external network** `louis-final_louis_net`:
+```yaml
+networks:
+  louis-final_louis_net:
+    external: true  # This network is SHARED with Louis app
+```
+
+**What this means**:
+- Running `docker-compose down` will ONLY stop the cefaleia container
+- Running `docker-compose up -d` will ONLY start the cefaleia container
+- The Louis application is on the same network but in a separate docker-compose project
+- Traefik (reverse proxy) is also on this network and manages routing for BOTH apps
+
+**DO NOT**:
+- ❌ Run `docker network rm louis-final_louis_net` (this will break Louis)
+- ❌ Modify the network configuration without checking Louis first
+- ❌ Run Docker commands that affect all containers on the network
 
 ## Architecture
 
@@ -124,8 +159,40 @@ The form implements several intelligent validation patterns:
 
 **Traefik Labels**: Configured for automatic HTTPS with Let's Encrypt on domain `minhador.tpfbrain.com`
 
+## Testing Changes (VPS Environment)
+
+Since this is a VPS with no local testing environment, follow this workflow:
+
+1. **Make code changes** to files (index.html, script.js, styles.css, etc.)
+2. **Commit changes** to git (optional but recommended)
+3. **Deploy to Docker** using the safe deployment process above
+4. **Test in browser** at https://minhador.tpfbrain.com
+5. **Check logs** if something goes wrong: `docker-compose logs -f app-cefaleia`
+6. **Rollback if needed**: `git checkout HEAD~1 <file>` then redeploy
+
+### Dashboard Access
+- **URL**: https://minhador.tpfbrain.com/dashboard
+- **Password**: `tpb801` (stored in dashboard.html:361 and script.js:366)
+
+### Quick Verification Commands
+```bash
+# Check if container is running
+docker-compose ps
+
+# View live logs
+docker-compose logs -f app-cefaleia
+
+# Check database file exists
+docker-compose exec app-cefaleia ls -lh /app/data/
+
+# Restart without rebuilding (for server.js changes only)
+docker-compose restart app-cefaleia
+```
+
 ## Important Notes
 
+- **VPS-ONLY**: No localhost testing available. All testing happens in production Docker.
+- **Shared Network**: Louis app is on the same Docker network. Be careful with network changes.
 - The form uses **localStorage** for draft auto-save on the client side
 - Full form data is stored as JSON in the `dados_completos` column
 - Some fields are extracted for quick querying (idade_inicio, crises_mes, etc.)

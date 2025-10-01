@@ -10,10 +10,15 @@ const PORT = process.env.PORT || 3000;
 
 // Configurar transporte de email
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true para 465, false para outros
     auth: {
         user: 'drthalesneuro@gmail.com',
         pass: 'pqblucaigxdvcugk'  // App password sem espaços
+    },
+    tls: {
+        rejectUnauthorized: false
     }
 });
 

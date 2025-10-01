@@ -182,10 +182,13 @@ app.post('/api/respostas', async (req, res) => {
 
             transporter.sendMail(mailOptions, (emailErr, info) => {
                 if (emailErr) {
-                    console.error('Erro ao enviar email:', emailErr);
+                    console.error('❌ Erro ao enviar email:', emailErr.message);
+                    console.error('Detalhes completos:', emailErr);
                     // Não falhar a requisição por causa do email
                 } else {
-                    console.log('✉️ Email enviado:', info.messageId);
+                    console.log('✉️ Email enviado com sucesso!');
+                    console.log('Message ID:', info.messageId);
+                    console.log('Response:', info.response);
                 }
             });
 
